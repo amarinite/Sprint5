@@ -19,21 +19,20 @@ public class GameController {
         return gameService.createNewGame();
     }
 
-    @GetMapping("/{id}")
-    public Mono<Game> getGameDetails(@PathVariable String id) {
-        return gameService.getGameDetails(id);
+    @GetMapping("/{gameId}")
+    public Mono<Game> getGameDetails(@PathVariable String gameId) {
+        return gameService.getGameDetails(gameId);
     }
 
-    // Endpoint para añadir un jugador al juego y repartirle cartas iniciales
     @PostMapping("/{gameId}/add-player")
-    public Mono<Game> addPlayerToGame(@PathVariable String gameId, @RequestParam Long playerId, @RequestParam String playerName) {
-        Player player = new Player(playerId, playerName); // Crear el jugador
-        return gameService.addPlayerToGame(gameId, player); // Añadirlo al juego y repartir cartas iniciales
+    public Mono<Game> addPlayerToGame(@PathVariable String gameId, @RequestParam String playerName) {
+        Player player = new Player(playerName);
+        return gameService.addPlayerToGame(gameId, player);
     }
 
-    @PostMapping("/{id}/play")
-    public Mono<Game> playGame(@PathVariable String id, @RequestParam Long playerId, @RequestParam boolean playerWantsCard) {
-        return gameService.playGame(id, playerId, playerWantsCard);
+    @PostMapping("/{gameId}/play")
+    public Mono<Game> playGame(@PathVariable String gameId, @RequestParam Long playerId, @RequestParam boolean playerWantsCard) {
+        return gameService.playGame(gameId, playerId, playerWantsCard);
     }
 
     @DeleteMapping("/{id}/delete")

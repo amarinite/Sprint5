@@ -15,9 +15,15 @@ import java.util.Map;
 @Service
 public class PlayerService {
 
-    @Autowired
+
     private GameRepository gameRepository;
     private PlayerRepository playerRepository;
+
+    @Autowired
+    public PlayerService(GameRepository gameRepository, PlayerRepository playerRepository) {
+        this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
+    }
 
     public Mono<Player> changePlayerName(Long playerId, String newName) {
         return playerRepository.findById(playerId)

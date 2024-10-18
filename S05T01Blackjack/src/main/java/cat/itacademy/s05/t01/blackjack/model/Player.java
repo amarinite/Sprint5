@@ -17,7 +17,6 @@ import java.util.List;
 public class Player {
     @Id
     private Long id;
-    @Column("name")
     private String name;
     @Column("total_wins")
     private int totalWins;
@@ -31,14 +30,14 @@ public class Player {
 
 
     public Player() {
+        this.name = "";
         this.hand = new ArrayList<>();
         this.bust = false;
         this.standing = false;
         this.totalWins = 0;
     }
 
-    public Player(Long id, String name) {
-        this.id = id;
+    public Player(String name) {
         this.name = name;
         this.hand = new ArrayList<>();
         this.bust = false;
