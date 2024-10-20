@@ -35,13 +35,12 @@ public class GameService {
     }
 
     public Mono<Game> addPlayerToGame(String gameId, Player player) {
-        // Guardamos el jugador en la base de datos antes de añadirlo al juego
-        return playerRepository.save(player)   // Guardamos el jugador en la tabla "players"
+        return playerRepository.save(player)
                 .flatMap(savedPlayer -> gameRepository.findById(gameId)
                         .flatMap(game -> {
-                            game.addPlayer(savedPlayer); // Añadimos el jugador al juego
-                            game.dealInitialCards(savedPlayer); // Repartimos las cartas iniciales
-                            return gameRepository.save(game);   // Guardamos el juego con el jugador añadido
+                            game.addPlayer(savedPlayer);
+                            game.dealInitialCards(savedPlayer);
+                            return gameRepository.save(game);
                         })
                 );
     }
@@ -55,15 +54,12 @@ public class GameService {
                             .findFirst()
                             .orElseThrow(() -> new PlayerNotFoundException("Player with ID " + playerId + " not found"));
 
-                    // Si el jugador quiere otra carta y no está "bust" ni "plantado"
                     if (playerWantsCard && !player.isBust() && !player.isStanding()) {
                         game.dealCardToPlayer(player);
                     } else {
-                        // El jugador decide plantarse
                         game.playerStand(player);
                     }
 
-                    // Verificar si todos los jugadores han terminado
                     if (game.allPlayersDone()) {
                         game.determineWinner();
                     }

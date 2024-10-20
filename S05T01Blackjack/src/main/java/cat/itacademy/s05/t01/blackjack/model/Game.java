@@ -32,8 +32,8 @@ public class Game {
     }
 
     public void dealInitialCards(Player player) {
-        dealCardToPlayer(player);  // Primera carta
-        dealCardToPlayer(player);  // Segunda carta
+        dealCardToPlayer(player);
+        dealCardToPlayer(player);
     }
 
     public void dealCardToPlayer(Player player) {
@@ -43,29 +43,24 @@ public class Game {
         }
     }
 
-    // Método para verificar si se puede repartir una carta al jugador
     private boolean canDealCard(Player player) {
         return !deck.isEmpty() && !player.isBust() && !player.isStanding();
     }
 
-    // Método para que un jugador se plante
     public void playerStand(Player player) {
         player.setStanding(true);
     }
 
-    // Comprobar si un jugador ha superado 21 puntos
     private void checkPlayerBust(Player player) {
         if (player.calculateHandValue() > MAX_SCORE) {
             player.setBust(true);
         }
     }
 
-    // Verificar si todos los jugadores han terminado (busteado o decidido plantarse)
     public boolean allPlayersDone() {
         return players.stream().allMatch(player -> player.isBust() || player.isStanding());
     }
 
-    // Determinar si el juego ha terminado y quién es el ganador
     public void determineWinner() {
         Player winner = null;
         int highestScore = 0;

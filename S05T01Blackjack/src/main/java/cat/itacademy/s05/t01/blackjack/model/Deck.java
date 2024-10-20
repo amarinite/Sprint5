@@ -2,7 +2,6 @@ package cat.itacademy.s05.t01.blackjack.model;
 
 import cat.itacademy.s05.t01.blackjack.enums.Suit;
 import cat.itacademy.s05.t01.blackjack.enums.Value;
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -52,26 +52,25 @@ public class PlayerService {
     public Flux<Player> getPlayerRanking() {
         Map<Long, Player> playerWinsMap = new HashMap<>();
 
-        return gameRepository.findAll() // Obtener todos los juegos
+        return gameRepository.findAll()
                 .flatMap(game -> {
-                    String winnerName = game.getWinner(); // Obtener el nombre del ganador
+                    String winnerName = game.getWinner();
                     return Flux.fromIterable(game.getPlayers())
-                            .filter(player -> player.getName().equals(winnerName)) // Filtrar por el jugador ganador
+                            .filter(player -> player.getName().equals(winnerName))
                             .doOnNext(player -> {
-                                // Actualizar el número de victorias del jugador en el mapa
                                 playerWinsMap.compute(player.getId(), (id, existingPlayer) -> {
                                     if (existingPlayer == null) {
-                                        player.incrementWins(); // Incrementar victoria si es nuevo
+                                        player.incrementWins();
                                         return player;
                                     } else {
-                                        existingPlayer.incrementWins(); // Sumar victoria si ya existe
+                                        existingPlayer.incrementWins();
                                         return existingPlayer;
                                     }
                                 });
                             });
                 })
-                .thenMany(Flux.fromIterable(playerWinsMap.values())) // Convertir el mapa a un flujo de jugadores
-                .sort((p1, p2) -> Integer.compare(p2.getTotalWins(), p1.getTotalWins())); // Ordenar por número de victorias
+                .thenMany(Flux.fromIterable(playerWinsMap.values()))
+                .sort((p1, p2) -> Integer.compare(p2.getTotalWins(), p1.getTotalWins()));
     }
 }
 
