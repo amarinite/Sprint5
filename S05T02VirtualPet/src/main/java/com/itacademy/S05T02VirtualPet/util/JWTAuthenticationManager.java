@@ -2,6 +2,8 @@ package com.itacademy.S05T02VirtualPet.util;
 
 
 import com.itacademy.S05T02VirtualPet.service.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 public class JWTAuthenticationManager implements ReactiveAuthenticationManager {
 
@@ -27,33 +30,47 @@ public class JWTAuthenticationManager implements ReactiveAuthenticationManager {
         String username = jwtUtil.extractUsername(token);
 
         return userService.findByUsername(username)
-                .filter(userDetails -> jwtUtil.validateToken(token, userDetails.getUsername()))  // Validar el token
-                .map(userDetails -> (Authentication) new UsernamePasswordAuthenticationToken(  // Convertir a Authentication
+                .filter(userDetails -> jwtUtil.validateToken(token, userDetails.getUsername()))
+                .map(userDetails -> new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities()
                 ))
-                .switchIfEmpty(Mono.error(new RuntimeException("Invalid JWT token")));  // Excepción manejada
+                .cast(Authentication.class)
+                .switchIfEmpty(Mono.error(new BadCredentialsException("Invalid JWT token")));
     }
 
     public ServerAuthenticationConverter authenticationConverter() {
-        return new ServerAuthenticationConverter() {
-            @Override
-            public Mono<Authentication> convert(ServerWebExchange exchange) {
-                String token = extractToken(exchange);
-                if (token != null) {
-                    return Mono.just(new UsernamePasswordAuthenticationToken(token, token)); // Pasa el token para validación
+        return exchange -> {
+            String token = extractToken(exchange);
+            log.debug("Extracted token: {}", token);
+            if (token != null) {
+                String username = jwtUtil.extractUsername(token);
+                log.debug("Extracted username: {}", username);
+                if (username != null) {
+                    log.info("Authentication successful for user: {}", username);
+                    return Mono.just(new UsernamePasswordAuthenticationToken(username, token));
+                } else {
+                    log.warn("No username found in the token.");
                 }
-                return Mono.empty();
+            } else {
+                log.warn("No token found in the request.");
             }
+            return Mono.empty();
         };
     }
 
     private String extractToken(ServerWebExchange exchange) {
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7); // Remueve 'Bearer '
+            return authorizationHeader.substring(7);
         }
+        log.warn("No JWT token found in the Authorization header.");
         return null;
     }
 }
+
+
+
+
+

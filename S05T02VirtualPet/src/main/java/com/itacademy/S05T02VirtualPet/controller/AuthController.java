@@ -5,39 +5,66 @@ import com.itacademy.S05T02VirtualPet.model.AuthRequest;
 import com.itacademy.S05T02VirtualPet.model.AuthResponse;
 import com.itacademy.S05T02VirtualPet.model.User;
 import com.itacademy.S05T02VirtualPet.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
-    @Autowired
-    private JWTUtil jwtUtil;
 
-    @Autowired
-    private UserService userService;
+    private final JWTUtil jwtUtil;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthController(JWTUtil jwtUtil, UserService userService, PasswordEncoder passwordEncoder) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest) {
         return userService.findByUsername(authRequest.getUsername())
-                .map(userDetails -> {
-                    if (userDetails.getPassword().equals(authRequest.getPassword())) {
-                        return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(authRequest.getUsername())));
+                .flatMap(userDetails -> {
+                    if (passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
+                        String token = jwtUtil.generateToken(authRequest.getUsername());
+                        log.info("User {} logged in successfully", authRequest.getUsername());
+                        return Mono.just(ResponseEntity.ok(new AuthResponse(token)));
                     } else {
-                        throw new BadCredentialsException("Invalid username or password");
+                        log.warn("Invalid password attempt for user {}", authRequest.getUsername());
+                        return Mono.error(new RuntimeException("Invalid username or password"));
                     }
-                }).switchIfEmpty(Mono.error(new BadCredentialsException("Invalid username or password")));
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("User {} not found", authRequest.getUsername());
+                    return Mono.error(new RuntimeException("Invalid username or password"));
+                }))
+                .onErrorResume(e -> {
+                    log.error("Authentication failed for user {}: {}", authRequest.getUsername(), e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body(new AuthResponse("Authentication failed: " + e.getMessage())));
+                });
     }
+
     @PostMapping("/signup")
     public Mono<ResponseEntity<String>> signup(@RequestBody User user) {
-        // Encrypt password before saving
-        user.setPassword(user.getPassword());
         return userService.save(user)
-                .map(savedUser -> ResponseEntity.ok("User signed up successfully"));
+                .map(savedUser -> {
+                    log.info("User {} signed up successfully", savedUser.getUsername());
+                    return ResponseEntity.ok("User signed up successfully");
+                })
+                .doOnError(e -> log.error("Error signing up user: {}", e.getMessage()))
+                .onErrorResume(e -> {
+                    log.error("Sign up failed: {}", e.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body("Sign up failed: " + e.getMessage()));
+                });
     }
 
     @GetMapping("/protected")
@@ -45,3 +72,5 @@ public class AuthController {
         return Mono.just(ResponseEntity.ok("You have accessed a protected endpoint!"));
     }
 }
+
+

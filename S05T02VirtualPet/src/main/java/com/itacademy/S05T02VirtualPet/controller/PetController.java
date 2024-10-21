@@ -4,6 +4,7 @@ import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.service.PetService;
 import com.itacademy.S05T02VirtualPet.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,16 +16,28 @@ import reactor.core.publisher.Mono;
 public class PetController {
 
     private final PetService petService;
-    private final UserService userService;
 
     @PostMapping
-    public Mono<Pet> createPet(@RequestBody Pet pet) {
-        String username = pet.getOwnerUsername();
+    public Mono<Pet> createPet(@RequestBody Pet pet, Authentication authentication) {
+        String username = authentication.getName();
         return petService.createPet(pet, username);
     }
 
-    @GetMapping()
-    public Flux<Pet> getAllPets(@RequestBody String username) {
+    @GetMapping
+    public Flux<Pet> getAllPets(Authentication authentication) {
+        if (authentication == null) {
+            return Flux.error(new RuntimeException("Authentication is null"));
+        }
+        String username = authentication.getName();
+        return petService.findAllPetsByUser(username);
+    }
+
+    @GetMapping("/myPets")
+    public Flux<Pet> getAllUserPets(Authentication authentication) {
+        if (authentication == null) {
+            return Flux.error(new RuntimeException("Authentication is null"));
+        }
+        String username = authentication.getName();
         return petService.findAllPetsByUser(username);
     }
 
@@ -39,8 +52,5 @@ public class PetController {
     }
 }
 
-//    @GetMapping()
-//    public Flux<Pet> getAllUserPets(Authentication authentication) {
-//        String username = authentication.getName();
-//        return petService.findAllPetsByUser(username);
-//    }
+
+
