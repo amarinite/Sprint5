@@ -1,5 +1,8 @@
 package com.itacademy.S05T02VirtualPet.service;
 
+import com.itacademy.S05T02VirtualPet.exception.PetNotFoundException;
+import com.itacademy.S05T02VirtualPet.exception.NoPetsFoundException;
+import com.itacademy.S05T02VirtualPet.exception.UserNotAuthenticatedException;
 import com.itacademy.S05T02VirtualPet.exception.UserNotFoundException;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.repository.PetRepository;
@@ -25,25 +28,33 @@ public class PetService {
                 });
     }
 
-    public Flux<Pet> getAllPets() {
-        return petRepository.findAll();
-    }
-
     public Flux<Pet> findAllPetsByUser(String username) {
-        return petRepository.findByOwnerUsername(username);
+        if (username == null) {
+            return Flux.error(new UserNotAuthenticatedException("User is not authenticated"));
+        }
+        return petRepository.findByOwnerUsername(username)
+                .switchIfEmpty(Flux.error(new NoPetsFoundException("No pets found for user: " + username)));
     }
 
-    public Mono<Pet> updatePet(String id, Pet updatedPet) {
+    public Mono<Pet> updatePet(String id, Pet updatedPet, String username) {
         return petRepository.findById(id)
+                .switchIfEmpty(Mono.error(new PetNotFoundException("Pet not found with id: " + id)))
                 .flatMap(pet -> {
                     pet.setMood(updatedPet.getMood());
                     pet.setEnergyLevel(updatedPet.getEnergyLevel());
+                    if (updatedPet.getName() != null) pet.setName(updatedPet.getName());
+                    if (updatedPet.getColor() != null) pet.setColor(updatedPet.getColor());
+                    if (updatedPet.getCharacteristics() != null) pet.setCharacteristics(updatedPet.getCharacteristics());
+
                     return petRepository.save(pet);
                 });
     }
 
+
     public Mono<Void> deletePet(String id) {
-        return petRepository.deleteById(id);
+        return petRepository.findById(id)
+                .switchIfEmpty(Mono.error(new PetNotFoundException("Pet not found with id: " + id)))
+                .flatMap(pet -> petRepository.deleteById(id));
     }
 }
 

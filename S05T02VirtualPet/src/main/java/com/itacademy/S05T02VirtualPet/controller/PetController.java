@@ -1,8 +1,9 @@
 package com.itacademy.S05T02VirtualPet.controller;
 
+import com.itacademy.S05T02VirtualPet.exception.NoPetsFoundException;
+import com.itacademy.S05T02VirtualPet.exception.UserNotAuthenticatedException;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.service.PetService;
-import com.itacademy.S05T02VirtualPet.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,27 +24,16 @@ public class PetController {
         return petService.createPet(pet, username);
     }
 
-    @GetMapping
-    public Flux<Pet> getAllPets(Authentication authentication) {
-        if (authentication == null) {
-            return Flux.error(new RuntimeException("Authentication is null"));
-        }
-        String username = authentication.getName();
-        return petService.findAllPetsByUser(username);
-    }
-
     @GetMapping("/myPets")
     public Flux<Pet> getAllUserPets(Authentication authentication) {
-        if (authentication == null) {
-            return Flux.error(new RuntimeException("Authentication is null"));
-        }
-        String username = authentication.getName();
+        String username = (authentication != null) ? authentication.getName() : null;
         return petService.findAllPetsByUser(username);
     }
 
     @PutMapping("/{id}")
-    public Mono<Pet> updatePet(@PathVariable String id, @RequestBody Pet pet) {
-        return petService.updatePet(id, pet);
+    public Mono<Pet> updatePet(@PathVariable String id, @RequestBody Pet pet, Authentication authentication) {
+        String username = (authentication != null) ? authentication.getName() : null;
+        return petService.updatePet(id, pet, username);
     }
 
     @DeleteMapping("/{id}")
