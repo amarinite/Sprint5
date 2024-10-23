@@ -3,6 +3,7 @@ package com.itacademy.S05T02VirtualPet.controller;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.service.PetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -12,6 +13,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/pets")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@Configuration
 public class PetController {
 
     private final PetService petService;
