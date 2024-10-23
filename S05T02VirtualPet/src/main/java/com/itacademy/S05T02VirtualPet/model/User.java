@@ -22,7 +22,7 @@ public class User {
     private String id;
     private String username;
     private String password;
-    private List<Pet> pets;
+    private List<String> pets;
     private List<String> roles;
 
     public List<GrantedAuthority> getAuthorities() {

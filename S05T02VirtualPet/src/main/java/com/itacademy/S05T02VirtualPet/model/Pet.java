@@ -23,6 +23,5 @@ public class Pet {
     private String mood;
     private int energyLevel;
     private Map<String, String> characteristics;
-    private String ownerUsername;
 }
 

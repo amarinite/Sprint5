@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeExchange()
                 .pathMatchers("/login", "/signup").permitAll()
+                .pathMatchers("/admin/**").hasRole("ADMIN")
                 .anyExchange().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)

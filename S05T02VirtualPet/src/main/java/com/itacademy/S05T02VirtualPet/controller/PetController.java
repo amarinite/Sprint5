@@ -1,7 +1,5 @@
 package com.itacademy.S05T02VirtualPet.controller;
 
-import com.itacademy.S05T02VirtualPet.exception.NoPetsFoundException;
-import com.itacademy.S05T02VirtualPet.exception.UserNotAuthenticatedException;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.service.PetService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +28,7 @@ public class PetController {
         return petService.findAllPetsByUser(username);
     }
 
+
     @PutMapping("/{id}")
     public Mono<Pet> updatePet(@PathVariable String id, @RequestBody Pet pet, Authentication authentication) {
         String username = (authentication != null) ? authentication.getName() : null;
@@ -37,8 +36,9 @@ public class PetController {
     }
 
     @DeleteMapping("/{id}")
-    public Mono<Void> deletePet(@PathVariable String id) {
-        return petService.deletePet(id);
+    public Mono<Void> deletePet(@PathVariable String id, Authentication authentication) {
+        String username = (authentication != null) ? authentication.getName() : null;
+        return petService.deletePet(id, username);
     }
 }
 

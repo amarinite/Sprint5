@@ -10,15 +10,20 @@ import reactor.core.publisher.Mono;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<String> handleUserNotAuthenticated(UserNotAuthenticatedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<String> handleUnauthorizedAccessException(UnauthorizedAccessException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Mono<ResponseEntity<String>> handlePlayerNotFoundException(UserNotFoundException ex) {
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()));
-    }
-
-    @ExceptionHandler(UserNotAuthenticatedException.class)
-    public ResponseEntity<String> handleUserNotAuthenticated(UserNotAuthenticatedException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 
     @ExceptionHandler(NoPetsFoundException.class)
