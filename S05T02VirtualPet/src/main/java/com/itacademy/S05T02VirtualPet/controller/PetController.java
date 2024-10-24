@@ -3,12 +3,14 @@ package com.itacademy.S05T02VirtualPet.controller;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.service.impl.PetServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/pets")
 @RequiredArgsConstructor
@@ -27,7 +29,11 @@ public class PetController {
     @GetMapping("/myPets")
     public Flux<Pet> getAllUserPets(Authentication authentication) {
         String username = (authentication != null) ? authentication.getName() : null;
-        return petService.findAllPetsByUser(username);
+        return petService.findAllPetsByUser(username)
+                .onErrorResume(e -> {
+                    log.error("Error retrieving pets: {}", e.getMessage());
+                    return Mono.error(e);
+                });
     }
 
 
