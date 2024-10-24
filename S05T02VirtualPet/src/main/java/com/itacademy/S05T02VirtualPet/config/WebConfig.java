@@ -14,6 +14,8 @@ public class WebConfig implements WebFluxConfigurer {
         corsRegistry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("Authorization", "Content-Type")
+                .exposedHeaders("Authorization")
                 .maxAge(3600);
     }
 }

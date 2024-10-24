@@ -1,7 +1,7 @@
 package com.itacademy.S05T02VirtualPet.util;
 
 
-import com.itacademy.S05T02VirtualPet.service.UserService;
+import com.itacademy.S05T02VirtualPet.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -20,9 +20,9 @@ import java.util.Collections;
 public class JWTAuthenticationManager implements ReactiveAuthenticationManager {
 
     private final JWTUtil jwtUtil;
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public JWTAuthenticationManager(JWTUtil jwtUtil, UserService userService) {
+    public JWTAuthenticationManager(JWTUtil jwtUtil, UserServiceImpl userService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
     }

@@ -1,7 +1,7 @@
 package com.itacademy.S05T02VirtualPet.controller;
 
 import com.itacademy.S05T02VirtualPet.model.Pet;
-import com.itacademy.S05T02VirtualPet.service.PetService;
+import com.itacademy.S05T02VirtualPet.service.impl.PetServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class PetController {
 
-    private final PetService petService;
+    private final PetServiceImpl petService;
 
     @PostMapping
     public Mono<Pet> createPet(@RequestBody Pet pet, Authentication authentication) {

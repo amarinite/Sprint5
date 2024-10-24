@@ -4,7 +4,7 @@ import com.itacademy.S05T02VirtualPet.util.JWTUtil;
 import com.itacademy.S05T02VirtualPet.model.AuthRequest;
 import com.itacademy.S05T02VirtualPet.model.AuthResponse;
 import com.itacademy.S05T02VirtualPet.model.User;
-import com.itacademy.S05T02VirtualPet.service.UserService;
+import com.itacademy.S05T02VirtualPet.service.impl.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,10 +19,10 @@ public class AuthController {
 
 
     private final JWTUtil jwtUtil;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(JWTUtil jwtUtil, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthController(JWTUtil jwtUtil, UserServiceImpl userService, PasswordEncoder passwordEncoder) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
