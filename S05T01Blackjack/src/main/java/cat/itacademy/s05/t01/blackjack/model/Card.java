@@ -1,32 +1,18 @@
 package cat.itacademy.s05.t01.blackjack.model;
 
 import cat.itacademy.s05.t01.blackjack.enums.Suit;
-import cat.itacademy.s05.t01.blackjack.enums.Value;
-import lombok.Data;
+import cat.itacademy.s05.t01.blackjack.enums.CardValue;
+import lombok.Getter;
 
-
+@Getter
 public class Card {
-    private final Value value;
+    private final CardValue cardValue;
     private final Suit suit;
 
-    public Card(Value value, Suit suit) {
-        this.value = value;
+    public Card(CardValue cardValue, Suit suit) {
+        this.cardValue = cardValue;
         this.suit = suit;
     }
 
-    public Value getValue() {
-        return value;
-    }
-
-    public Suit getSuit() {
-        return suit;
-    }
-
-    public int getNumericValue() {
-        return switch (value) {
-            case ACE -> 11;
-            case JACK, QUEEN, KING -> 10;
-            default -> Integer.parseInt(value.getSymbol());
-        };
-    }
+    public int getNumericValue() { return cardValue.getCardValue(); }
 }

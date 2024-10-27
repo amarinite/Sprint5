@@ -4,6 +4,7 @@ import cat.itacademy.s05.t01.blackjack.exception.GameNotFoundException;
 import cat.itacademy.s05.t01.blackjack.model.Game;
 import cat.itacademy.s05.t01.blackjack.repository.GameRepository;
 import cat.itacademy.s05.t01.blackjack.repository.PlayerRepository;
+import cat.itacademy.s05.t01.blackjack.service.impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ public class GameServiceTest {
     private PlayerRepository playerRepository;
 
     @InjectMocks
-    private GameService gameService;
+    private GameServiceImpl gameService;
 
     @BeforeEach
     void setUp() {

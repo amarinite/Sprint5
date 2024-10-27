@@ -2,7 +2,7 @@ package cat.itacademy.s05.t01.blackjack.controller;
 
 import cat.itacademy.s05.t01.blackjack.exception.GameNotFoundException;
 import cat.itacademy.s05.t01.blackjack.model.Game;
-import cat.itacademy.s05.t01.blackjack.service.GameService;
+import cat.itacademy.s05.t01.blackjack.service.impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +20,7 @@ public class GameControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private GameService gameService;
+    private GameServiceImpl gameService;
 
     private Game mockGame;
 

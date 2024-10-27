@@ -1,10 +1,10 @@
 package cat.itacademy.s05.t01.blackjack.controller;
 
 import cat.itacademy.s05.t01.blackjack.model.Player;
-import cat.itacademy.s05.t01.blackjack.service.PlayerService;
+import cat.itacademy.s05.t01.blackjack.service.impl.PlayerServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,10 +12,10 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/player")
 @Tag(name = "Player API", description = "API for managing players")
+@RequiredArgsConstructor
 public class PlayerController {
 
-    @Autowired
-    private PlayerService playerService;
+    private final PlayerServiceImpl playerService;
 
     @Operation(summary = "Change player name", description = "Change the name of an existing player")
     @PutMapping("/{playerId}")

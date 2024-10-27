@@ -2,20 +2,20 @@ package cat.itacademy.s05.t01.blackjack.controller;
 
 import cat.itacademy.s05.t01.blackjack.model.Game;
 import cat.itacademy.s05.t01.blackjack.model.Player;
-import cat.itacademy.s05.t01.blackjack.service.GameService;
+import cat.itacademy.s05.t01.blackjack.service.impl.GameServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/game")
 @Tag(name = "Game API", description = "API for managing blackjack games")
+@RequiredArgsConstructor
 public class GameController {
 
-    @Autowired
-    private GameService gameService;
+    private final GameServiceImpl gameService;
 
     @Operation(summary = "Create a new game", description = "Creates a new game instance")
     @PostMapping("/new")
