@@ -4,6 +4,7 @@ import com.itacademy.S05T02VirtualPet.exception.PetNotFoundException;
 import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.repository.PetRepository;
 import com.itacademy.S05T02VirtualPet.repository.UserRepository;
+import com.itacademy.S05T02VirtualPet.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl {
+public class AdminServiceImpl implements AdminService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
