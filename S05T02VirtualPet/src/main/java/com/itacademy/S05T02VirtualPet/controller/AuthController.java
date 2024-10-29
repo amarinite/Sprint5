@@ -71,10 +71,10 @@ public class AuthController {
     }
 
 
-//    @GetMapping("/protected")
-//    public Mono<ResponseEntity<String>> protectedEndpoint() {
-//        return Mono.just(ResponseEntity.ok("You have accessed a protected endpoint!"));
-//    }
+    @GetMapping("/protected")
+    public Mono<ResponseEntity<String>> protectedEndpoint() {
+        return Mono.just(ResponseEntity.ok("You have accessed a protected endpoint!"));
+    }
 }
 
 

@@ -5,6 +5,7 @@ import com.itacademy.S05T02VirtualPet.model.Pet;
 import com.itacademy.S05T02VirtualPet.repository.PetRepository;
 import com.itacademy.S05T02VirtualPet.repository.UserRepository;
 import com.itacademy.S05T02VirtualPet.service.PetService;
+import com.itacademy.S05T02VirtualPet.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,11 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
+    private final ValidationUtil validationUtil;
 
     public Mono<Pet> createPet(Pet pet, String username) {
+        validationUtil.validatePet(pet);
+
         return petRepository.save(pet)
                 .flatMap(savedPet -> {
                     return userRepository.findByUsername(username)
@@ -66,6 +70,8 @@ public class PetServiceImpl implements PetService {
         if (username == null) {
             return Mono.error(new UserNotAuthenticatedException("User is not authenticated"));
         }
+        validationUtil.validatePet(updatedPet);
+
         return petRepository.findById(id)
                 .switchIfEmpty(Mono.error(new PetNotFoundException("Pet not found with id: " + id)))
                 .flatMap(pet -> userRepository.findByUsername(username)
