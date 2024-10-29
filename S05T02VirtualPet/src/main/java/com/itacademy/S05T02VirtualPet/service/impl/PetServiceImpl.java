@@ -6,12 +6,14 @@ import com.itacademy.S05T02VirtualPet.repository.PetRepository;
 import com.itacademy.S05T02VirtualPet.repository.UserRepository;
 import com.itacademy.S05T02VirtualPet.service.PetService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PetServiceImpl implements PetService {
@@ -39,14 +41,26 @@ public class PetServiceImpl implements PetService {
         if (username == null) {
             return Flux.error(new UserNotAuthenticatedException("User is not authenticated"));
         }
+
         return userRepository.findByUsername(username)
                 .flatMapMany(user -> {
+                    if (user == null) {
+                        return Flux.error(new UserNotFoundException("User not found: " + username));
+                    }
+
                     if (user.getPets() == null || user.getPets().isEmpty()) {
                         return Flux.error(new NoPetsFoundException("No pets found for user: " + username));
                     }
+
                     return petRepository.findAllById(user.getPets());
+                })
+                .doOnError(e -> log.error("Error in findAllPetsByUser: {}", e.getMessage()))
+                .onErrorResume(e -> {
+                    return Flux.empty();
                 });
     }
+
+
 
     public Mono<Pet> updatePet(String id, Pet updatedPet, String username) {
         if (username == null) {

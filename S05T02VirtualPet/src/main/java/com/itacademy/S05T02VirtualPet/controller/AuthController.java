@@ -1,10 +1,12 @@
 package com.itacademy.S05T02VirtualPet.controller;
 
-import com.itacademy.S05T02VirtualPet.util.JWTUtil;
-import com.itacademy.S05T02VirtualPet.model.AuthRequest;
-import com.itacademy.S05T02VirtualPet.model.AuthResponse;
+import com.itacademy.S05T02VirtualPet.dto.AuthRequest;
+import com.itacademy.S05T02VirtualPet.dto.AuthResponse;
+import com.itacademy.S05T02VirtualPet.enums.Role;
 import com.itacademy.S05T02VirtualPet.model.User;
 import com.itacademy.S05T02VirtualPet.service.impl.UserServiceImpl;
+import com.itacademy.S05T02VirtualPet.util.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,28 +14,24 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RequiredArgsConstructor
 public class AuthController {
 
-
-    private final JWTUtil jwtUtil;
     private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
-
-    public AuthController(JWTUtil jwtUtil, UserServiceImpl userService, PasswordEncoder passwordEncoder) {
-        this.jwtUtil = jwtUtil;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public Mono<ResponseEntity<AuthResponse>> login(@RequestBody AuthRequest authRequest) {
         return userService.findByUsername(authRequest.getUsername())
                 .flatMap(userDetails -> {
                     if (passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
-                        String token = jwtUtil.generateToken(authRequest.getUsername());
+                        String token = jwtUtil.generateToken(userDetails);
                         log.info("User {} logged in successfully", authRequest.getUsername());
                         return Mono.just(ResponseEntity.ok(new AuthResponse(token)));
                     } else {
@@ -52,8 +50,13 @@ public class AuthController {
                 });
     }
 
+
     @PostMapping("/signup")
     public Mono<ResponseEntity<String>> signup(@RequestBody User user) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of(Role.ROLE_USER));
+        }
+
         return userService.save(user)
                 .map(savedUser -> {
                     log.info("User {} signed up successfully", savedUser.getUsername());
@@ -67,10 +70,11 @@ public class AuthController {
                 });
     }
 
-    @GetMapping("/protected")
-    public Mono<ResponseEntity<String>> protectedEndpoint() {
-        return Mono.just(ResponseEntity.ok("You have accessed a protected endpoint!"));
-    }
+
+//    @GetMapping("/protected")
+//    public Mono<ResponseEntity<String>> protectedEndpoint() {
+//        return Mono.just(ResponseEntity.ok("You have accessed a protected endpoint!"));
+//    }
 }
 
 
