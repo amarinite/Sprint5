@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "a9df8a8d-4927-446d-af49-4e6e9c11197a",
+		"name": "VirtualPet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22673071"
+	},
+	"item": [
+		{
+			"name": "Get User Pets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYXVyYSIsImlhdCI6MTcyOTc1OTExNCwiZXhwIjoxNzI5Nzk1MTE0fQ.FDepR_7m2X9lmm8KhcGvtYiGKdO2Uq5MIEtZes6cOLQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/pets/myPets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pets",
+						"myPets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"laura\",\r\n    \"email\": \"laura@mail.com\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"miri\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Pet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXJpIiwiaWF0IjoxNzMwMjQzMTg2LCJleHAiOjE3MzAzMjk1ODZ9.MGuTezCDB3fpP_PJ5_K-NStP3yqKYK5S7kQkBvfFs_Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Piri\",\r\n    \"type\":\"cat\",\r\n    \"color\":\"black\",\r\n    \"energyLevel\":2,\r\n    \"characteristics\": {\r\n        \"size\":\"small\",\r\n        \"character\":\"friendly\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify Pet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXJpIiwiaWF0IjoxNzMwMjQzMTg2LCJleHAiOjE3MzAzMjk1ODZ9.MGuTezCDB3fpP_PJ5_K-NStP3yqKYK5S7kQkBvfFs_Q",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Piri piri\",\r\n    \"type\": \"cat\",\r\n    \"color\": \"black\",\r\n    \"mood\": \"happy\",\r\n    \"energyLevel\": 2,\r\n    \"characteristics\": {\r\n        \"size\": \"small\",\r\n        \"character\": \"friendly\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pets/67216a792cd9db59228f6bcb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pets",
+						"67216a792cd9db59228f6bcb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Modify Admin Pet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczMDI0NjIwNCwiZXhwIjoxNzMwMzMyNjA0fQ.tyrCNETETAvxJtJJwcTOXaIBZVhX3U9Wg5yNhx1ZCn0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Piri-piri\",\r\n    \"type\": \"cat\",\r\n    \"color\": \"black\",\r\n    \"mood\": \"happy\",\r\n    \"energyLevel\": 2,\r\n    \"characteristics\": {\r\n        \"size\": \"small\",\r\n        \"character\": \"friendly\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/admin/pets/67216a792cd9db59228f6bcb",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"pets",
+						"67216a792cd9db59228f6bcb"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Pet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsYXVyYSIsImlhdCI6MTcyOTcxNzcxMCwiZXhwIjoxNzI5NzUzNzEwfQ.6N3u1xSPYFtxezZcZsTlVLu3whPUMr-1qut4pJLcELM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/pets/{{petId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"pets",
+						"{{petId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Admin Pets",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczMDI0NjIwNCwiZXhwIjoxNzMwMzMyNjA0fQ.tyrCNETETAvxJtJJwcTOXaIBZVhX3U9Wg5yNhx1ZCn0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/pets/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"pets",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
