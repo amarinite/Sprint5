@@ -1,7 +1,7 @@
 # Virtual Pet App
 
 ## Overview
-This is a Spring WebFlux application that allows users to manage pets for a virtual pet app. Users can sign up, log in, and perform CRUD operations on their pets. Admin users can access all pets in the system.
+This is a Spring Boot application that allows users to manage pets for a virtual pet app. Users can sign up, log in, and perform CRUD operations on their pets. Admin users can access all pets in the system.
 
 ## Features
 - User Authentication (Signup/Login)
@@ -10,7 +10,7 @@ This is a Spring WebFlux application that allows users to manage pets for a virt
 - Role-based access control (Admin role for managing all pets)
 
 ## Technologies Used
-- Spring WebFlux
+- Spring Boot
 - Spring Security
 - JWT (JSON Web Tokens)
 - Lombok
